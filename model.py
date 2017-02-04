@@ -17,15 +17,30 @@ class Brand(db.Model):
 
     __tablename__ = "brands"
 
-    pass
+    brand_id = db.Column(db.String(5), primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+    founded = db.Column(db.Integer, nullable=True)
+    headquarters = db.Column(db.String(50), nullable=True)
+    discontinued = db.Column(db.Integer, nullable=True)
 
+    def __repr__(self):
+        return "Brand('%s', name='%s')" % (self.brand_id, self.name)
 
 class Model(db.Model):
     """Car model."""
 
     __tablename__ = "models"
 
-    pass
+    model_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    year = db.Column(db.Integer, nullable=False)
+    brand_id = db.Column(db.String(5), db.ForeignKey('brands.brand_id'), nullable=False)
+    name = db.Column(db.String(50), nullable=False)
+
+    brand = db.relationship('Brand', backref="models")
+
+    def __repr__(self):
+        return "Model(%i, %s %s, brand_id='%s')" % (self.model_id, self.year,
+                                                    self.name, self.brand_id)
 
 # End Part 1
 
