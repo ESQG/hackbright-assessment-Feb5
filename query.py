@@ -23,14 +23,47 @@ init_app()
 # 1. What is the datatype of the returned value of
 # ``Brand.query.filter_by(name='Ford')``?
 
-
+# The returned value is an object of the BaseQuery class defined in the flask_sqlalchemy
+# module.  That means it's a query from Python to the PostgreSQL database, specifically to
+# the table referred to in the SQLAlchemy Brand class, which can be
+# saved so it can be asked again.  It includes methods such as .one() or .all() which
+# will run the query and return a Brand class, or a list of Brand classes, or None if
+# nothing matches the query.  It also includes methods for refining the SQL query, such as
+# .filter(*args).
 
 # 2. In your own words, what is an association table, and what type of
 # relationship (many to one, many to many, one to one, etc.) does an
 # association table manage?
 
+# An association table is an abstract table, defined for the purpose of factoring
+# many-to-many relationships through an intermadiary.  By abstract I mean that although it is a
+# table just like any other, its only meaningful content is the correspondences between records
+# of A and B. By factoring I mean in the sense of composing functions (in this case turning
+# mappings that aren't functions into mappings that are, at least in one direction).
 
+# In a pictorial graph sense, if two tables A and B are shown with records as nodes and edges
+# representing the correspondences from records in A to records in B, then after refactoring
+# through an association table AB, each edge becomes a record in AB, with one field corresponding
+# to the vertex in A, one field corresponding to the other vertex in B, and usually, a third
+# field to label each record of AB with an integer primary key.
+# If we graph the results there are no edges directly connecting A to B.
+# Also, the relationships between A, B, and AB are not only many-to-one relationships
+# but actually surjective functions A-->AB and B-->AB: that is, each record in A or B maps via an
+# associated field to a unique record in AB, and each record in AB corresponds to at least one
+# record in A and at least one record in B.
 
+# The purpose of an association table is that of data normalization, a principle holding that no
+# many-to-many relationships should be stored as such, and all must be refactored through association
+# tables (or so-called middle tables: like association tables but with meaningful content of their own).
+# The reasoning is that after normalizing, the only fields repeated in the database are the associated
+# fields between A and B.  Without this normalization, the many-to-many relationships of tables A and B
+# would require that full records of A and B be repeated in order to show the correspondences:
+# potentially a lot of redundant information would be stored, making records
+# inconvenient to update and more vulnerable to errors.
+
+# Since the purpose of AB is to capture each relationships between records of A and B, if A and B
+# have primary keys it is natural to use both of these as "foreign keys" in AB.
+# By using foreign keys, a SQL database will enforce the surjectivity of the functions A-->AB and B-->AB.
 
 # -------------------------------------------------------------------
 # Part 3: SQLAlchemy Queries
