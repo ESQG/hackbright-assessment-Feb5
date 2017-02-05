@@ -104,26 +104,32 @@ def get_model_info(year):
     """Takes in a year and prints out each model name, brand name, and brand
     headquarters for that year using only ONE database query."""
 
-    pass
+    year_query = db.session.query(Model.name, Brand.name, Brand.headquarters).join(
+                 Brand).filter(Model.year==year)
+
+    for info in year_query.all():
+        model_name, brand_name, brand_headquarters = info
+        print "Brand: %s; Headquarters: %s; Model: %s" %(brand_name, brand_headquarters, model_name)
 
 
 def get_brands_summary():
     """Prints out each brand name and each model name with year for that brand
     using only ONE database query."""
 
-    pass
+    brands_query = db.session.query(Model.year, Brand.name, Model.name).join(Brand)
+
+    for car_labels in brands_query.all():
+        print "%s %s %s" % car_labels
 
 
 def search_brands_by_name(mystr):
     """Returns all Brand objects corresponding to brands whose names include
     the given string."""
 
-    pass
-
+    return Brand.query.filter(Brand.name.like("%"+mystr+"%")).all()   # SQLAlchemy escapes quotes, right?  S.O. says so 
 
 def get_models_between(start_year, end_year):
     """Returns all Model objects corresponding to models made between
     start_year (inclusive) and end_year (exclusive)."""
 
-    pass
-
+    return Model.query.filter(Model.year >= start_year, Model.year < end_year).all()
