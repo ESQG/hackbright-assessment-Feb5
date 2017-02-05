@@ -70,29 +70,29 @@ init_app()
 
 
 # Get the brand with the ``id`` of "ram."
-q1 = "your query here"
+q1 = "Brand.query.get('ram')"
 
 # Get all models with the name "Corvette" and the brand_id "che."
-q2 = "your query here"
+q2 = "Model.query.filter_by(name='Corvette', brand_id='che').all()"
 
 # Get all models that are older than 1960.
-q3 = "your query here"
+q3 = "Model.query.filter(Model.year < 1960).all()"
 
 # Get all brands that were founded after 1920.
-q4 = "your query here"
+q4 = "Brand.query.filter(Brand.founded > 1920).all()"
 
 # Get all models with names that begin with "Cor."
-q5 = "your query here"
+q5 = "Model.query.filter(Model.name.like('Cor%')).all()"
 
 # Get all brands that were founded in 1903 and that are not yet discontinued.
-q6 = "your query here"
+q6 = "Brand.query.filter(Brand.founded==1903, Brand.discontinued.is_(None)).all()"
 
 # Get all brands that are either 1) discontinued (at any time) or 2) founded
 # before 1950.
-q7 = "your query here"
+q7 = "Brand.query.filter(Brand.discontinued.isnot(None) | (Brand.founded < 1950)).all()"
 
 # Get any model whose brand_id is not "for."
-q8 = "your query here"
+q8 = "Model.query.filter(Model.brand_id != 'for').all()"
 
 
 
