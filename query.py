@@ -118,8 +118,8 @@ def get_brands_summary():
 
     brands_query = db.session.query(Model.year, Brand.name, Model.name).join(Brand)
 
-    for car_labels in brands_query.all():
-        print "%i %s %s" % car_labels   # can't unpack tuple directly because integers
+    for car_descriptors in brands_query.all():
+        print "%i %s %s" % car_descriptors
 
 
 def search_brands_by_name(mystr):
