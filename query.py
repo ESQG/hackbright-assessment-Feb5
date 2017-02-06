@@ -58,7 +58,7 @@ init_app()
 # be repeated or the data is inconsistent. Thus, A and B have to store redundant information
 # which is inconvenient to update and more vulnerable to mistakes.  With the aid of an
 # association table AB, the tables A and B do not need to reference each other; instead, AB
-# uses its foreign keys to all track the correspondences. By construction, every record in
+# uses its foreign keys to track all the correspondences. By construction, every record in
 # AB corresponds to a unique record in A and a unique record in B; this allows the database
 # to follow the principle of data normalization, which states that all relationships between
 # tables should be one-to-many, many-to-one, or one-to-one.  The only redundant information
