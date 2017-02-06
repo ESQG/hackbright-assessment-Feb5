@@ -41,29 +41,33 @@ init_app()
 # of A and B. By factoring I mean in the sense of composing functions (in this case turning
 # mappings that aren't functions into mappings that are, at least in one direction).
 
-# In a pictorial graph sense, if two tables A and B are shown with records as nodes and edges
-# representing the correspondences from records in A to records in B, then after refactoring
-# through an association table AB, each edge becomes a record in AB, with one field corresponding
-# to the vertex in A, one field corresponding to the other vertex in B, and usually, a third
-# field to label each record of AB with an integer primary key.
-# If we graph the results there are no edges directly connecting A to B.
-# Also, the relationships between A, B, and AB are not only many-to-one relationships
-# but actually surjective functions A-->AB and B-->AB: that is, each record in A or B maps via an
-# associated field to a unique record in AB, and each record in AB corresponds to at least one
-# record in A and at least one record in B.
+# If we think of the records of A and the records of B as nodes of a graph, with edges
+# representing the correspondences between them, then the association table AB is a
+# (numbered) list of the edges.  That is, it has 3 columns: a primary key for usual 
+# record-managing purposes (although one could define an association table without this
+# column), a column representing records from table A (usually: a foreign key referencing
+# A's primary key), and a column representing records from table B; so that each record in
+# the association table labels a correspondence between some record of A and some record
+# of B.
 
-# The purpose of an association table is that of data normalization, a principle holding that no
-# many-to-many relationships should be stored as such, and all must be refactored through association
-# tables (or so-called middle tables: like association tables but with meaningful content of their own).
-# The reasoning is that after normalizing, the only fields repeated in the database are the associated
-# fields between A and B.  Without this normalization, the many-to-many relationships of tables A and B
-# would require that full records of A and B be repeated in order to show the correspondences:
-# potentially a lot of redundant information would be stored, making records
-# inconvenient to update and more vulnerable to errors.
+# The purpose of an association table is to prevent redundancy of records in the tables A
+# and B. In tabular format, to associate a record of table A with more than one record of
+# table B, we need to use multiple rows in table A, each one referring to a different
+# record of table B; and vice versa. Even if we use (as one should) just one field in A
+# as a foreign key referencing B's primary key, and vice versa, all other fields in A must
+# be repeated or the data is inconsistent. Thus, A and B have to store redundant information
+# which is inconvenient to update and more vulnerable to mistakes.  With the aid of an
+# association table AB, the tables A and B do not need to reference each other; instead, AB
+# uses its foreign keys to all track the correspondences. By construction, every record in
+# AB corresponds to a unique record in A and a unique record in B; this allows the database
+# to follow the principle of data normalization, which states that all relationships between
+# tables should be one-to-many, many-to-one, or one-to-one.  The only redundant information
+# is the foreign keys of AB, but PostgreSQL (and presumably other versions of SQL) can
+# reduce the hazards of updating records by enforcing the foreign key relationship.
 
-# Since the purpose of AB is to capture each relationships between records of A and B, if A and B
-# have primary keys it is natural to use both of these as "foreign keys" in AB.
-# By using foreign keys, a SQL database will enforce the surjectivity of the functions A-->AB and B-->AB.
+# A less abstract analogue to an association table is called a middle table: one that
+# yields the same normalization benefits as the association table, but has meaningful
+# content in addition to the correspondences.
 
 # -------------------------------------------------------------------
 # Part 3: SQLAlchemy Queries
